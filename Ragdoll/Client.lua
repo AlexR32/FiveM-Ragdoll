@@ -52,7 +52,6 @@ end)
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        local Player = PlayerPedId()
         if Ragdoll then
             if Mode == 1 then
                 RagdollType = 0
@@ -105,7 +104,7 @@ function InstructionalButtons()
     while not HasScaleformMovieLoaded(Scaleform) do
         Wait(0)
     end
-    
+
     BeginScaleformMovieMethod(Scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
     ScaleformMovieMethodAddParamInt(-1)
     EndScaleformMovieMethod()
