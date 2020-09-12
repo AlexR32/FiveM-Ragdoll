@@ -1,16 +1,16 @@
 local Ragdoll = false
 
 Citizen.CreateThread(function()
-    while true do 
+    while true do
         Citizen.Wait(0)
         local Player = PlayerPedId()
         
-        if IsEntityDead(Player) or IsPedInAnyVehicle(Player, true) then
+        if not CanPedRagdoll(Player) or IsEntityDead(Player) or IsPedInAnyVehicle(Player, true) then
             Ragdoll = false
         end
 
         if IsControlJustReleased(0, Control.Toggle) then
-            if Ragdoll or IsEntityDead(Player) or IsPedInAnyVehicle(Player, false) then
+            if Ragdoll or not CanPedRagdoll(Player) or IsEntityDead(Player) or IsPedInAnyVehicle(Player, false) then
                 Ragdoll = false
             else
                 Ragdoll = true
