@@ -19,31 +19,37 @@ Citizen.CreateThread(function()
 
         if Ragdoll then
             SetPedToRagdoll(Player, 1000, 1000, RagdollType, false, false, false)
-            Alert("Press ~" .. IndexToName(Control.Toggle) .. "~ to stand up\nSpeed: " .. Speed .. "\nMode: " .. Mode)
+            if ToggleControls then
+                Alert("Press ~" .. IndexToName(Control.Toggle) .. "~ to stand up\nSpeed: " .. Speed .. "\nMode: " .. Mode)
+            else
+                Alert("Press ~" .. IndexToName(Control.Toggle) .. "~ to stand up\nMode: " .. Mode)
+            end
             InstructionalButtons()
-            Rotation = GetGameplayCamRot()
-            X,Y,Z = RotationToDirection(Rotation)
-            sX,sY,sZ = RotationToSideDirection(Rotation)
-            if Debug then
-                Citizen.Trace("Direction: " .. X .. ", " .. Y .. "\nSide Direction: " .. sX .. ", " .. sY .. "\n")
-            end
-            if IsControlPressed(0, Control.Forward) then
-                ApplyForceToEntity(Player, 0, X * Speed, Y * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
-            end
-            if IsControlPressed(0, Control.Left) then
-                ApplyForceToEntity(Player, 0, -sX * Speed, -sY * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
-            end
-            if IsControlPressed(0, Control.Backward) then
-                ApplyForceToEntity(Player, 0, -X * Speed, -Y * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
-            end
-            if IsControlPressed(0, Control.Right) then
-                ApplyForceToEntity(Player, 0, sX * Speed, sY * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
-            end
-            if IsControlPressed(0, Control.Up) then
-                ApplyForceToEntity(Player, 0, 0.0, 0.0, Speed, 0.0, 0.0, 0.0, false, false, true, true, false, true)
-            end
-            if IsControlPressed(0, Control.Down) then
-                ApplyForceToEntity(Player, 0, 0.0, 0.0, -Speed, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+            if ToggleControls then
+                Rotation = GetGameplayCamRot()
+                X,Y,Z = RotationToDirection(Rotation)
+                sX,sY,sZ = RotationToSideDirection(Rotation)
+                if Debug then
+                    Citizen.Trace("Direction: " .. X .. ", " .. Y .. "\nSide Direction: " .. sX .. ", " .. sY .. "\n")
+                end
+                if IsControlPressed(0, Control.Forward) then
+                    ApplyForceToEntity(Player, 0, X * Speed, Y * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                end
+                if IsControlPressed(0, Control.Left) then
+                    ApplyForceToEntity(Player, 0, -sX * Speed, -sY * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                end
+                if IsControlPressed(0, Control.Backward) then
+                    ApplyForceToEntity(Player, 0, -X * Speed, -Y * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                end
+                if IsControlPressed(0, Control.Right) then
+                    ApplyForceToEntity(Player, 0, sX * Speed, sY * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                end
+                if IsControlPressed(0, Control.Up) then
+                    ApplyForceToEntity(Player, 0, 0.0, 0.0, Speed, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                end
+                if IsControlPressed(0, Control.Down) then
+                    ApplyForceToEntity(Player, 0, 0.0, 0.0, -Speed, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                end
             end
         end
     end
@@ -58,21 +64,22 @@ Citizen.CreateThread(function()
             elseif Mode == 2 then
                 RagdollType = 2
             end
-
-            if IsControlPressed(0, Control.Increase) then
-                if Speed ~= 200.0 then
-                    Speed = Speed + 5.0
-                    Wait(100)
-                else
-                    Speed = 200.0
+            if ToggleControls then
+                if IsControlPressed(0, Control.Increase) then
+                    if Speed ~= 200.0 then
+                        Speed = Speed + 5.0
+                        Wait(100)
+                    else
+                        Speed = 200.0
+                    end
                 end
-            end
-            if IsControlPressed(0, Control.Decrease) then
-                if Speed ~= 0.0 then
-                    Speed = Speed - 5.0
-                    Wait(100)
-                else
-                    Speed = 0.0
+                if IsControlPressed(0, Control.Decrease) then
+                    if Speed ~= 0.0 then
+                        Speed = Speed - 5.0
+                        Wait(100)
+                    else
+                        Speed = 0.0
+                    end
                 end
             end
             if IsControlJustPressed(0, Control.Mode) then
@@ -92,9 +99,9 @@ function Alert(Text)
     EndTextCommandDisplayHelp(0, false, false, 0)
 end
 
-function Notification(Message)
+function Notification(Text)
     BeginTextCommandThefeedPost("STRING")
-    AddTextComponentSubstringPlayerName(Message)
+    AddTextComponentSubstringPlayerName(Text)
     EndTextCommandThefeedPostTicker(false, false)
 end
 
@@ -109,39 +116,47 @@ function InstructionalButtons()
     ScaleformMovieMethodAddParamInt(-1)
     EndScaleformMovieMethod()
 
-    BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
-    ScaleformMovieMethodAddParamInt(0)
-    ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Backward, true))
-    ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Forward, true))
-    ScaleformMovieMethodAddParamPlayerNameString("Move")
-    EndScaleformMovieMethod()
+    if ToggleControl then
+        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        ScaleformMovieMethodAddParamInt(0)
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Backward, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Forward, true))
+        ScaleformMovieMethodAddParamPlayerNameString("Move")
+        EndScaleformMovieMethod()
 
-    BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
-    ScaleformMovieMethodAddParamInt(1)
-    ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Right, true))
-    ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Left, true))
-    ScaleformMovieMethodAddParamPlayerNameString("Left/Right")
-    EndScaleformMovieMethod()
+        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        ScaleformMovieMethodAddParamInt(1)
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Right, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Left, true))
+        ScaleformMovieMethodAddParamPlayerNameString("Left/Right")
+        EndScaleformMovieMethod()
 
-    BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
-    ScaleformMovieMethodAddParamInt(2)
-    ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Up, true))
-    ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Down, true))
-    ScaleformMovieMethodAddParamPlayerNameString("Up/Down")
-    EndScaleformMovieMethod()
+        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        ScaleformMovieMethodAddParamInt(2)
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Up, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Down, true))
+        ScaleformMovieMethodAddParamPlayerNameString("Up/Down")
+        EndScaleformMovieMethod()
 
-    BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
-    ScaleformMovieMethodAddParamInt(3)
-    ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Increase, true))
-    ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Decrease, true))
-    ScaleformMovieMethodAddParamPlayerNameString("Increase/Decrease Speed")
-    EndScaleformMovieMethod()
-
-    BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
-    ScaleformMovieMethodAddParamInt(4)
-    ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Mode, true))
-    ScaleformMovieMethodAddParamPlayerNameString("Change Mode")
-    EndScaleformMovieMethod()
+        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        ScaleformMovieMethodAddParamInt(3)
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Increase, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Decrease, true))
+        ScaleformMovieMethodAddParamPlayerNameString("Increase/Decrease Speed")
+        EndScaleformMovieMethod()
+        
+        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        ScaleformMovieMethodAddParamInt(4)
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Mode, true))
+        ScaleformMovieMethodAddParamPlayerNameString("Change Mode")
+        EndScaleformMovieMethod()
+    else
+        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        ScaleformMovieMethodAddParamInt(0)
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Mode, true))
+        ScaleformMovieMethodAddParamPlayerNameString("Change Mode")
+        EndScaleformMovieMethod()
+    end
 
     DrawScaleformMovieFullscreen(Scaleform, 255, 255, 255, 255)
 end

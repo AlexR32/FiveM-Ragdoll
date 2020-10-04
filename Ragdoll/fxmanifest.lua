@@ -1,7 +1,7 @@
 fx_version "bodacious"
 game "gta5"
 author "AlexR32"
-version "1.1.2"
+version "1.1.3"
 
 client_scripts {
     "Config.lua",
