@@ -19,13 +19,18 @@ Citizen.CreateThread(function()
 
         if Ragdoll then
             SetPedToRagdoll(Player, 1000, 1000, RagdollType, false, false, false)
-            if ToggleControls then
-                Alert("Press ~" .. IndexToName(Control.Toggle) .. "~ to stand up\nSpeed: " .. Speed .. "\nMode: " .. Mode)
-            else
-                Alert("Press ~" .. IndexToName(Control.Toggle) .. "~ to stand up\nMode: " .. Mode)
+            
+            if not IsHudHidden() then
+                if ToggleControl then
+                    Alert("Press ~" .. IndexToName(Control.Toggle) .. "~ to stand up\nSpeed: " .. Speed .. "\nMode: " .. Mode)
+                else
+                    Alert("Press ~" .. IndexToName(Control.Toggle) .. "~ to stand up\nMode: " .. Mode)
+                end
+
+                InstructionalButtons()
             end
-            InstructionalButtons()
-            if ToggleControls then
+
+            if ToggleControl then
                 Rotation = GetGameplayCamRot()
                 X,Y,Z = RotationToDirection(Rotation)
                 sX,sY,sZ = RotationToSideDirection(Rotation)
@@ -64,7 +69,7 @@ Citizen.CreateThread(function()
             elseif Mode == 2 then
                 RagdollType = 2
             end
-            if ToggleControls then
+            if ToggleControl then
                 if IsControlPressed(0, Control.Increase) then
                     if Speed ~= 200.0 then
                         Speed = Speed + 5.0
@@ -106,59 +111,65 @@ function Notification(Text)
 end
 
 function InstructionalButtons()
-    local Scaleform = RequestScaleformMovie("INSTRUCTIONAL_BUTTONS")
+    local Scale = RequestScaleformMovie("INSTRUCTIONAL_BUTTONS")
 
-    while not HasScaleformMovieLoaded(Scaleform) do
+    while not HasScaleformMovieLoaded(Scale) do
         Wait(0)
     end
 
-    BeginScaleformMovieMethod(Scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
-    ScaleformMovieMethodAddParamInt(-1)
-    EndScaleformMovieMethod()
-
     if ToggleControl then
-        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        BeginScaleformMovieMethod(Scale, "CLEAR_ALL")
+        EndScaleformMovieMethod()
+
+        BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(0)
         ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Backward, true))
         ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Forward, true))
         ScaleformMovieMethodAddParamPlayerNameString("Move")
         EndScaleformMovieMethod()
 
-        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(1)
         ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Right, true))
         ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Left, true))
         ScaleformMovieMethodAddParamPlayerNameString("Left/Right")
         EndScaleformMovieMethod()
 
-        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(2)
         ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Up, true))
         ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Down, true))
         ScaleformMovieMethodAddParamPlayerNameString("Up/Down")
         EndScaleformMovieMethod()
 
-        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(3)
         ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Increase, true))
         ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Decrease, true))
         ScaleformMovieMethodAddParamPlayerNameString("Increase/Decrease Speed")
         EndScaleformMovieMethod()
-        
-        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+
+        BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(4)
         ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Mode, true))
         ScaleformMovieMethodAddParamPlayerNameString("Change Mode")
         EndScaleformMovieMethod()
     else
-        BeginScaleformMovieMethod(Scaleform, "SET_DATA_SLOT")
+        BeginScaleformMovieMethod(Scale, "CLEAR_ALL")
+        EndScaleformMovieMethod()
+
+        BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(0)
         ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Mode, true))
         ScaleformMovieMethodAddParamPlayerNameString("Change Mode")
         EndScaleformMovieMethod()
     end
 
-    DrawScaleformMovieFullscreen(Scaleform, 255, 255, 255, 255)
+    BeginScaleformMovieMethod(Scale, "DRAW_INSTRUCTIONAL_BUTTONS")
+    ScaleformMovieMethodAddParamInt(0)
+    EndScaleformMovieMethod()
+
+    DrawScaleformMovieFullscreen(Scale, 255, 255, 255, 255, 0)
 end
 
 function DegToRad(Degree)
