@@ -1,5 +1,5 @@
 # FiveM-Ragdoll
-Simple Ragdoll for FiveM with controls
+[CitizenFX Forum Topic](https://forum.cfx.re/t/ragdoll-with-controls/1665346)
 
 ## Installation
 1. Download **[Ragdoll](https://github.com/AlexR32/FiveM-Ragdoll/releases/latest)**
@@ -10,7 +10,5 @@ Simple Ragdoll for FiveM with controls
 6. Press H to check if it works
 7. Edit `Config.lua` if you want
 
-## Photo
-[Screenshot1](https://prnt.sc/ustdju)
-[Screenshot2](https://prnt.sc/ustdh7)
-[Screenshot3](https://prnt.sc/ustcfy)
+## Screenshots
+[Imgur Album](https://imgur.com/a/bNUNBJq)
