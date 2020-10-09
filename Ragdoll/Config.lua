@@ -10,8 +10,8 @@ Control = {
     Decrease = 23, -- F
     Mode = 38, -- E
 }
-
-Debug = false -- Print coords to console (Default: false)
+VersionCheck = true -- Prints the update information to the server console when a new update is available (Default: true)
+Debug = false -- Prints coordinates to the player console (Default: false)
 Speed = 100.0 -- How fast the ragdoll will fly (Default: 100.0) (Speed: 0.0 - 200.0)
-Mode = 2 -- Default mode when logging into the server (Default: 2) (Mode: 1 - 2) (1 - Just a ragdoll 2 - ped tries to stay on his feet)
-ToggleControl = true -- Disable/Enable controls by default when logging into server (Default: true)
+Mode = 2 -- Default mode when logging into the server (Default: 2) (Mode: 1 - 2) (1 - Just a ragdoll 2 - Ped tries to stay on his feet)
+ToggleControl = true -- Enable/Disable controls by default when logging into server (Default: true)
