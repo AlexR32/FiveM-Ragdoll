@@ -3,8 +3,8 @@
 
 ## Installation
 1. Download **[FiveM-Ragdoll](https://github.com/AlexR32/FiveM-Ragdoll/releases/latest)**
-2. Unpack `FiveM-Ragdoll` folder to your `server-data\resources`
-3. Add `FiveM-Ragdoll` to your `server.cfg`
+2. Unpack `Ragdoll` folder to your `server-data\resources`
+3. Add `Ragdoll` to your `server.cfg`
 4. Restart/Start server
 5. Join your server
 6. Press H to check if it works
