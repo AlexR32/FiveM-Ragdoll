@@ -1,5 +1,5 @@
 # FiveM-Ragdoll
-[CitizenFX Forum Topic](https://img.shields.io/github/v/release/AlexR32/FiveM-Ragdoll)
+[CitizenFX Forum Topic](https://forum.cfx.re/t/ragdoll-with-controls/1665346)
 
 ## Installation
 1. Download **[FiveM-Ragdoll](https://github.com/AlexR32/FiveM-Ragdoll/releases/latest)**
