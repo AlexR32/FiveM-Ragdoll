@@ -1,4 +1,4 @@
 {
-    "Version": "1.1.5",
-    "Changelog": "Added version check"
+    "Version": "1.1.6",
+    "Changelog": "Deleted debug and added HudHidden"
 }

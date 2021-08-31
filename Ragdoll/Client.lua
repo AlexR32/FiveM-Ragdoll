@@ -3,13 +3,14 @@ local Ragdoll = false
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
+
         local Player = PlayerPedId()
         
         if not CanPedRagdoll(Player) or IsEntityDead(Player) or IsPedInAnyVehicle(Player, true) then
             Ragdoll = false
         end
 
-        if IsControlJustReleased(0, Control.Toggle) then
+        if IsControlJustPressed(0, Config.Controls.Toggle) then
             if Ragdoll or not CanPedRagdoll(Player) or IsEntityDead(Player) or IsPedInAnyVehicle(Player, false) then
                 Ragdoll = false
             else
@@ -18,42 +19,40 @@ Citizen.CreateThread(function()
         end
 
         if Ragdoll then
-            SetPedToRagdoll(Player, 1000, 1000, RagdollType, false, false, false)
+            SetPedToRagdoll(Player, 1000, 1000, Config.RagdollType, false, false, false)
             
-            if not IsHudHidden() then
-                if ToggleControl then
-                    Alert("Press ~" .. IndexToName(Control.Toggle) .. "~ to stand up\nSpeed: " .. Speed .. "\nMode: " .. Mode)
+            if not IsHudHidden() or not Config.HudHidden then
+                if Config.ToggleControls then
+                    Alert("Press ~" .. IndexToName(Config.Controls.Toggle) .. "~ to stand up\nSpeed: " .. Config.Speed .. "\nRagdoll Type: " .. Config.RagdollType)
                 else
-                    Alert("Press ~" .. IndexToName(Control.Toggle) .. "~ to stand up\nMode: " .. Mode)
+                    Alert("Press ~" .. IndexToName(Config.Controls.Toggle) .. "~ to stand up\nRagdoll Type: " .. Config.RagdollType)
                 end
 
                 InstructionalButtons()
             end
 
-            if ToggleControl then
+            if Config.ToggleControls then
                 Rotation = GetGameplayCamRot()
                 X,Y,Z = RotationToDirection(Rotation)
-                sX,sY,sZ = RotationToSideDirection(Rotation)
-                if Debug then
-                    Citizen.Trace("Direction: " .. X .. ", " .. Y .. "\nSide Direction: " .. sX .. ", " .. sY .. "\n")
+                OffX,OffY,OffZ = RotationToOffsetDirection(Rotation)
+
+                if IsControlPressed(0, Config.Controls.Forward) then
+                    ApplyForceToEntity(Player, 0, X * Config.Speed, Y * Config.Speed, 0, 0, 0, 0, 0, false, true, true, false, true)
                 end
-                if IsControlPressed(0, Control.Forward) then
-                    ApplyForceToEntity(Player, 0, X * Speed, Y * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                if IsControlPressed(0, Config.Controls.Left) then
+                    ApplyForceToEntity(Player, 0, -OffX * Config.Speed, -OffY * Config.Speed, 0, 0, 0, 0, 0, false, true, true, false, true)
                 end
-                if IsControlPressed(0, Control.Left) then
-                    ApplyForceToEntity(Player, 0, -sX * Speed, -sY * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                if IsControlPressed(0, Config.Controls.Backward) then
+                    ApplyForceToEntity(Player, 0, -X * Config.Speed, -Y * Config.Speed, 0, 0, 0, 0, 0, false, true, true, false, true)
                 end
-                if IsControlPressed(0, Control.Backward) then
-                    ApplyForceToEntity(Player, 0, -X * Speed, -Y * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                if IsControlPressed(0, Config.Controls.Right) then
+                    ApplyForceToEntity(Player, 0, OffX * Config.Speed, OffY * Config.Speed, 0, 0, 0, 0, 0, false, true, true, false, true)
                 end
-                if IsControlPressed(0, Control.Right) then
-                    ApplyForceToEntity(Player, 0, sX * Speed, sY * Speed, 0.0, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                if IsControlPressed(0, Config.Controls.Up) then
+                    ApplyForceToEntity(Player, 0, 0, 0, Config.Speed + .0, 0, 0, 0, 0, false, true, true, false, true)
                 end
-                if IsControlPressed(0, Control.Up) then
-                    ApplyForceToEntity(Player, 0, 0.0, 0.0, Speed, 0.0, 0.0, 0.0, false, false, true, true, false, true)
-                end
-                if IsControlPressed(0, Control.Down) then
-                    ApplyForceToEntity(Player, 0, 0.0, 0.0, -Speed, 0.0, 0.0, 0.0, false, false, true, true, false, true)
+                if IsControlPressed(0, Config.Controls.Down) then
+                    ApplyForceToEntity(Player, 0, 0, 0, -Config.Speed + .0, 0, 0, 0, 0, false, true, true, false, true)
                 end
             end
         end
@@ -64,34 +63,31 @@ Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
         if Ragdoll then
-            if Mode == 1 then
-                RagdollType = 0
-            elseif Mode == 2 then
-                RagdollType = 2
-            end
-            if ToggleControl then
-                if IsControlPressed(0, Control.Increase) then
-                    if Speed ~= 200.0 then
-                        Speed = Speed + 5.0
+            if Config.ToggleControls then
+                if IsControlPressed(0, Config.Controls.Increase) then
+                    if Config.Speed ~= Config.MaxSpeed then
+                        Config.Speed = Config.Speed + 5
                         Wait(100)
                     else
-                        Speed = 200.0
+                        Config.Speed = Config.MaxSpeed
                     end
                 end
-                if IsControlPressed(0, Control.Decrease) then
-                    if Speed ~= 0.0 then
-                        Speed = Speed - 5.0
+                if IsControlPressed(0, Config.Controls.Decrease) then
+                    if Config.Speed ~= 0 then
+                        Config.Speed = Config.Speed - 5
                         Wait(100)
                     else
-                        Speed = 0.0
+                        Config.Speed = 0
                     end
                 end
             end
-            if IsControlJustPressed(0, Control.Mode) then
-                if Mode ~= 2 then
-                    Mode = Mode + 1
+            if IsControlJustPressed(0, Config.Controls.RagdollType) then
+                if Config.RagdollType == 2 then
+                    Config.RagdollType = 0
+                elseif Config.RagdollType == 0 then
+                    Config.RagdollType = 2
                 else
-                    Mode = 1
+                    Config.RagdollType = 1
                 end
             end
         end
@@ -104,12 +100,6 @@ function Alert(Text)
     EndTextCommandDisplayHelp(0, false, false, 0)
 end
 
-function Notification(Text)
-    BeginTextCommandThefeedPost("STRING")
-    AddTextComponentSubstringPlayerName(Text)
-    EndTextCommandThefeedPostTicker(false, false)
-end
-
 function InstructionalButtons()
     local Scale = RequestScaleformMovie("INSTRUCTIONAL_BUTTONS")
 
@@ -117,42 +107,42 @@ function InstructionalButtons()
         Wait(0)
     end
 
-    if ToggleControl then
+    if Config.ToggleControls then
         BeginScaleformMovieMethod(Scale, "CLEAR_ALL")
         EndScaleformMovieMethod()
 
         BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(0)
-        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Backward, true))
-        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Forward, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Config.Controls.Backward, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Config.Controls.Forward, true))
         ScaleformMovieMethodAddParamPlayerNameString("Move")
         EndScaleformMovieMethod()
 
         BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(1)
-        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Right, true))
-        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Left, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Config.Controls.Right, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Config.Controls.Left, true))
         ScaleformMovieMethodAddParamPlayerNameString("Left/Right")
         EndScaleformMovieMethod()
 
         BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(2)
-        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Up, true))
-        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Down, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Config.Controls.Up, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Config.Controls.Down, true))
         ScaleformMovieMethodAddParamPlayerNameString("Up/Down")
         EndScaleformMovieMethod()
 
         BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(3)
-        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Increase, true))
-        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Decrease, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Config.Controls.Increase, true))
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Config.Controls.Decrease, true))
         ScaleformMovieMethodAddParamPlayerNameString("Increase/Decrease Speed")
         EndScaleformMovieMethod()
 
         BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(4)
-        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Mode, true))
-        ScaleformMovieMethodAddParamPlayerNameString("Change Mode")
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Config.Controls.RagdollType, true))
+        ScaleformMovieMethodAddParamPlayerNameString("Change Ragdoll Type")
         EndScaleformMovieMethod()
     else
         BeginScaleformMovieMethod(Scale, "CLEAR_ALL")
@@ -160,8 +150,8 @@ function InstructionalButtons()
 
         BeginScaleformMovieMethod(Scale, "SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(0)
-        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Control.Mode, true))
-        ScaleformMovieMethodAddParamPlayerNameString("Change Mode")
+        ScaleformMovieMethodAddParamTextureNameString(GetControlInstructionalButton(0, Config.Controls.RagdollType, true))
+        ScaleformMovieMethodAddParamPlayerNameString("Change Ragdoll Type")
         EndScaleformMovieMethod()
     end
 
@@ -184,7 +174,7 @@ function RotationToDirection(Rotation)
     return X,Y,Z
 end
 
-function RotationToSideDirection(Rotation)
+function RotationToOffsetDirection(Rotation)
     sZ = DegToRad(Rotation.z)
     sX = -DegToRad(Rotation.x)
     sNumber = math.abs(math.cos(sX))
