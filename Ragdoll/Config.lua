@@ -12,9 +12,9 @@ Config = {
         RagdollType = 38 -- E
     },
     ToggleControls = true, -- Enable/Disable flying (Default: true)
-    Speed = 50.0, -- How fast the ragdoll will fly (Default: 100)
-    IndentIncrease = 5, -- How much speed to increase or decrease (Default: 5)
-    MaxSpeed = 200, -- Limit for the speed value (Default: 200)
+    Speed = 50.0, -- How fast the ragdoll will fly (Default: 50.0)
+    IndentIncrease = 5.0, -- How much speed to increase or decrease (Default: 5.0)
+    MaxSpeed = 200.0, -- Limit for the speed value (Default: 200.0)
     RagdollType = 2, -- Ragdoll Type  (Default: 2) (0 - Simple Ragdoll 2 - Euphoria Ragdoll)
     HudHidden = false -- Disable instructional buttons and info box
 }
