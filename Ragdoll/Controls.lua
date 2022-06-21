@@ -341,8 +341,8 @@ local ControlName = {
     "INPUT_VEH_HYDRAULICS_CONTROL_RIGHT",
     "INPUT_VEH_HYDRAULICS_CONTROL_UP",
     "INPUT_VEH_HYDRAULICS_CONTROL_DOWN",
-    "INPUT_VEH_HYDRAULICS_CONTROL_LR",
     "INPUT_VEH_HYDRAULICS_CONTROL_UD",
+    "INPUT_VEH_HYDRAULICS_CONTROL_LR",
     "INPUT_SWITCH_VISOR",
     "INPUT_VEH_MELEE_HOLD",
     "INPUT_VEH_MELEE_LEFT",
@@ -357,11 +357,14 @@ local ControlName = {
     "INPUT_VEH_FLY_BOMB_BAY",
     "INPUT_VEH_FLY_COUNTER",
     "INPUT_VEH_TRANSFORM",
+    "INPUT_QUAD_LOCO_REVERSE",
+    "INPUT_RESPAWN_FASTER",
+    "INPUT_HUDMARKER_SELECT"
 }
 
-function IndexToName(Key)
+function IndexToName(Key) Key = Key + 1
     for Index, Control in pairs(ControlName) do
-        if Index == Key + 1 then
+        if Index == Key then
             return Control
         end
     end
