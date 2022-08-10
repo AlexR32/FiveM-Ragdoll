@@ -1,7 +1,4 @@
-local Scaleform = RequestScaleformMovie("INSTRUCTIONAL_BUTTONS")
-while not HasScaleformMovieLoaded(Scaleform) do
-    Citizen.Wait(0)
-end local Ragdoll = false
+local Ragdoll = false
 
 local function Alert(Text)
     BeginTextCommandDisplayHelp("STRING")
@@ -34,7 +31,7 @@ local function RotationToOffsetDirection(Rotation)
     return vector3(math.cos(Z) * AbsCosX, math.sin(Z) * AbsCosX, math.sin(X))
 end
 
-local function InstructionalButtons()
+local function InstructionalButtons(Scaleform)
     BeginScaleformMovieMethod(Scaleform,"CLEAR_ALL")
     EndScaleformMovieMethod()
 
@@ -46,8 +43,8 @@ local function InstructionalButtons()
         BeginScaleformMovieMethod(Scaleform,"SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(0)
         ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Right,true))
-        ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Backward,true))
         ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Left,true))
+        ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Backward,true))
         ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Forward,true))
         ScaleformMovieMethodAddParamPlayerNameString("Move")
         EndScaleformMovieMethod()
@@ -61,15 +58,15 @@ local function InstructionalButtons()
 
         BeginScaleformMovieMethod(Scaleform,"SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(2)
-        ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Up,true))
         ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Down,true))
+        ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Up,true))
         ScaleformMovieMethodAddParamPlayerNameString("Up/Down")
         EndScaleformMovieMethod()
 
         BeginScaleformMovieMethod(Scaleform,"SET_DATA_SLOT")
         ScaleformMovieMethodAddParamInt(3)
-        ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Increase,true))
         ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Decrease,true))
+        ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0,Config.Controls.Increase,true))
         ScaleformMovieMethodAddParamPlayerNameString("Increase/Decrease Speed")
         EndScaleformMovieMethod()
 
@@ -100,6 +97,11 @@ local function InstructionalButtons()
 end
 
 Citizen.CreateThread(function()
+    local Scaleform = RequestScaleformMovie("INSTRUCTIONAL_BUTTONS")
+    while not HasScaleformMovieLoaded(Scaleform) do
+        Citizen.Wait(0)
+    end
+    
     while true do Citizen.Wait(0)
         local PlayerPed = PlayerPedId()
         
@@ -118,8 +120,8 @@ Citizen.CreateThread(function()
         if Ragdoll then
             SetPedToRagdoll(PlayerPed, 1000, 1000, Config.RagdollType, true, true, false)
             if not IsHudHidden() or Config.HudHidden then
+                InstructionalButtons(Scaleform)
                 Alert(FormatAlert())
-                InstructionalButtons()
             end
 
             if Config.ToggleControls then

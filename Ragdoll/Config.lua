@@ -5,8 +5,8 @@ Config = {
         Backward = 33, -- S
         Left = 34, -- A
         Right = 35, -- D
-        Up = 44, -- Q
-        Down = 48, -- Z
+        Up = 22, -- Q
+        Down = 21, -- Z
         Increase = 45, -- R
         Decrease = 23, -- F
         RagdollType = 38 -- E
@@ -15,6 +15,6 @@ Config = {
     Speed = 50.0, -- How fast the ragdoll will fly (Default: 50.0)
     IndentIncrease = 5.0, -- How much speed to increase or decrease (Default: 5.0)
     MaxSpeed = 200.0, -- Limit for the speed value (Default: 200.0)
-    RagdollType = 2, -- Ragdoll Type  (Default: 2) (0 - Simple Ragdoll 2 - Euphoria Ragdoll)
-    HudHidden = false -- Disable instructional buttons and info box
+    RagdollType = 2, -- Ragdoll Type  (Default: 2) (0 = Relax 2 = Balance)
+    HudHidden = false -- Disable instructional buttons and info box (Default: false)
 }
