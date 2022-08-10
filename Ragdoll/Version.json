@@ -1,4 +1,4 @@
 {
-    "Version": "1.1.7",
-    "Changelog": "Code improvements, version check deleted (useless because i think its final update), added IncreaseIdent to config"
+    "Version": "1.1.8",
+    "Changelog": "Fixes"
 }
